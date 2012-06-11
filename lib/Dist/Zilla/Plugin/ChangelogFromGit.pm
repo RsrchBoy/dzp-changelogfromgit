@@ -164,6 +164,8 @@ sub gather_files {
 					$self->debug()
 				);
 
+                next unless $self->should_include_log($log);
+
 				$this_release->add_to_changes(
 					Software::Release::Change->new(
 						author_email    => $log->author_email,
@@ -188,6 +190,8 @@ sub gather_files {
 
 	$self->add_file($file);
 }
+
+sub should_include_log { 1 }
 
 ### Render the changelog.
 
@@ -815,7 +819,7 @@ C<< @{$self->releases()} >>.
 get_release() returns a single release by index.  The first release
 in the change log may be retrieved as C<< $self->get_release(0) >>.
 
-=head3 releae_count
+=head3 release_count
 
 release_count() returns the number of Software::Release objects in the
 L</releases> attribute.
@@ -847,6 +851,14 @@ other version control systems.
 
 We should also consider abstracting the formatting code out to a role
 so that it can be shared among different plugins.
+
+=head1 OTHER METHODS
+
+=head2 should_use_log($log)
+
+We return true if the passed log message should be used in generating the
+changelog entry.  This method is provided for the convienence of subclassers
+and always returns true by default.
 
 =head1 BUGS
 
